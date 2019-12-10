@@ -4,7 +4,7 @@
 
 let setUpToolTip = function() {
 	let tooltip = "", toolTipDiv = document.querySelector(".div-tool-tip"), toolTipElements = Array
-			.from(document.querySelectorAll(".tool-tip"));
+			.from(document.querySelectorAll(".tool-tip")), timer;
 
 	let displayTooltip = function(e, obj) {
 		tooltip = obj.dataset.tooltip;
@@ -18,15 +18,18 @@ let setUpToolTip = function() {
 
 	let fadeOut = function(element) {
 		let op = 1;
-		let timer = setInterval(function() {
-			if (op <= 0.1) {
-				clearInterval(timer);
-				element.style.opacity = 0;
-				element.style.display = "none";
-			}
-			element.style.opacity = op;
-			op -= op * 0.1;
-		}, 10);
+		if (!timer) {
+			timer = setInterval(function() {
+				if (op <= 0.1) {
+					clearInterval(timer);
+					timer = null;
+					element.style.opacity = 0;
+					element.style.display = "none";
+				}
+				element.style.opacity = op;
+				op -= op * 0.1;
+			}, 10);
+		}
 	};
 
 	let fadeIn = function(element) {
@@ -42,11 +45,16 @@ let setUpToolTip = function() {
 	};
 
 	toolTipElements.forEach(function(ele) {
+		let timeout;
 		ele.addEventListener("mouseenter", function(e) {
-			displayTooltip(e, this);
+			let that = this;
+			timeout = setTimeout(function() {
+				displayTooltip(e, that);
+			}, 400);
 		});
 		ele.addEventListener("mouseleave", function(e) {
 			// toolTipDiv.style.opacity = 0;
+			clearTimeout(timeout);
 			fadeOut(toolTipDiv);
 		});
 	});
