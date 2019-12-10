@@ -6,8 +6,8 @@ let setUpToolTip = function() {
 	let tooltip = "", toolTipDiv = document.querySelector(".div-tool-tip"), toolTipElements = Array
 			.from(document.querySelectorAll(".tool-tip")), timer;
 
-	let displayTooltip = function(e, obj) {
-		tooltip = obj.dataset.tooltip;
+	let displayTooltip = function(e) {
+		tooltip = this.dataset.tooltip;
 		toolTipDiv.innerHTML = tooltip;
 		toolTipDiv.style.top = e.pageY + "px";
 		toolTipDiv.style.left = e.pageX + "px";
@@ -47,9 +47,10 @@ let setUpToolTip = function() {
 	toolTipElements.forEach(function(ele) {
 		let timeout;
 		ele.addEventListener("mouseenter", function(e) {
-			let that = this;
+			// let that = this;
 			timeout = setTimeout(function() {
-				displayTooltip(e, that);
+				// using .call() to call function to avoid "this" issue
+				displayTooltip.call(ele, e);
 			}, 400);
 		});
 		ele.addEventListener("mouseleave", function(e) {
