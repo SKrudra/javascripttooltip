@@ -44,7 +44,7 @@ let setUpToolTip = function() {
 		}, 10);
 	};
 
-	toolTipElements.forEach(function(ele) {
+	let eventBinder = function(ele) {
 		let timeout;
 		ele.addEventListener("mouseenter", function(e) {
 			// let that = this;
@@ -58,6 +58,8 @@ let setUpToolTip = function() {
 			clearTimeout(timeout);
 			fadeOut(toolTipDiv);
 		});
-	});
+	};
+
+	toolTipElements.forEach(eventBinder);
 };
 setUpToolTip();
